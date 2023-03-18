@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 
-const apiKey = '1a497533ffbe4fac90710fb29655b2ee';
-const apiUrl = 'https://newsapi.org/v2/everything';
+import { News } from '../interfaces/news-interface';
+import { DynamicNewsService } from '../services/dynamic-news.service';
 
 @Component({
   selector: 'app-politics-news',
@@ -11,26 +11,13 @@ const apiUrl = 'https://newsapi.org/v2/everything';
   styleUrls: ['./politics-news.component.scss']
 })
 export class PoliticsNewsComponent {
-  politicsNews: any[] = [];
+  politicsNews: News[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private newsService: DynamicNewsService) {}
 
   ngOnInit() {
-    axios.get(apiUrl, {
-      params: {
-        apiKey: apiKey,
-        q: 'politics OR senate OR election',
-        language: 'en',
-        sortBy: 'publishedAt',
-        pageSize: 10
-      }
-    })
-    .then(response => {
-      console.log(response.data.articles);
-      this.politicsNews = response.data.articles;
-    })
-    .catch(error => {
-      console.log(error);
+    this.newsService.getDynamicNews('politics OR senate OR election').then(articles => {
+      this.politicsNews = articles;
     });
   }
 
