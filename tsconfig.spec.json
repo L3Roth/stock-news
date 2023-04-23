@@ -3,10 +3,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "esModuleInterop": true,
     "types": [
       "jasmine"
     ]
   },
+  "lib": ["es2017", "dom", "jasmine", "node"],
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts"

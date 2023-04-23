@@ -1,24 +1,29 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-
 import { News } from '../interfaces/news-interface';
+import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DynamicNewsService {
 
-  private readonly API_KEY = '1a497533ffbe4fac90710fb29655b2ee';
-  private readonly API_URL = 'https://newsapi.org/v2/everything';
+  private readonly API_KEY: string = environment.apiKey;
+  private readonly API_URL: string = environment.apiUrl;
 
   dynamicNews: News[] = [];
 
-  constructor() { }
+  constructor() {
+  }
 
   getDynamicNews(newskeywords: string) {
-    return axios.get(this.API_URL, {
+    return axios.get(this.getApiUrl(), {
       params: {
-        apiKey: this.API_KEY,
+        apiKey: this.getApiKey(),
         q: newskeywords,
         language: 'en',
         sortBy: 'publishedAt',
@@ -31,4 +36,27 @@ export class DynamicNewsService {
       throw error;
     })
   }
+
+  searchNews(keyword: string): Observable<News[]> {
+    return from(axios.get(this.getApiUrl(), {
+      params: {
+        apiKey: this.getApiKey(),
+        q: keyword,
+        language: 'en',
+        sortBy: 'publishedAt',
+        pageSize: 10
+      }
+    })).pipe(
+      map(response => response.data.articles as News[])
+    );
+  }
+
+  getApiUrl(): string {
+    return this.API_URL;
+  }
+
+  getApiKey(): string {
+    return this.API_KEY;
+  }
+  
 }

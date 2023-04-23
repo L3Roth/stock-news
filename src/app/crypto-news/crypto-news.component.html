@@ -1,6 +1,9 @@
 <div class="container">
-    <h1 class="mb-2">Crypto News</h1>
-    <div class="pb-4" *ngFor="let news of cryptoNews">
+  <h1 class="mb-2">Crypto News</h1>
+  <div class="pb-4" *ngIf="!cryptoNews">
+    <p class="error">Sorry, there was an error retrieving the news. Please try again later.</p>
+  </div>
+  <div class="pb-4 news" *ngFor="let news of cryptoNews">
       <h2>{{news.title}}</h2>
       <div class="row">
         <img class="w-50 pt-0 mt-0" src="{{news.urlToImage}}">
@@ -9,7 +12,5 @@
             <a class="btn btn-outline-dark" href="{{news.url}}">Read More</a>
         </div>
       </div>
-    </div>
+  </div>
 </div>
-
-
